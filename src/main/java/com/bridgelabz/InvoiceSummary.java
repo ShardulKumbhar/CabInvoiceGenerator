@@ -2,32 +2,29 @@ package com.bridgelabz;
 
 import java.util.Objects;
 
+
 public class InvoiceSummary {
-    private int numofRides;
     private double totalFare;
-    private double avrageFare;
+    private int numOfRides;
+    private double averageFare;
 
-    public InvoiceSummary(int numofRides, double totalFare) {
-        this.numofRides = numofRides;
+    /**
+     * Created Constructor
+     *
+     * @param totalFare
+     * @param numOfRides
+     */
+    public InvoiceSummary(double totalFare, int numOfRides) {
         this.totalFare = totalFare;
-        this.avrageFare = this.totalFare/this.numofRides;
-
+        this.numOfRides = numOfRides;
+        this.averageFare = this.totalFare / numOfRides;
     }
 
-    public boolean equals(Object object) {
-        if (this == object) return true;
-        if (!(object instanceof InvoiceSummary)) return false;
-        if (!super.equals(object)) return false;
-        InvoiceSummary that = (InvoiceSummary) object;
-        return numofRides == that.numofRides && java.lang.Double.compare(that.totalFare, totalFare) == 0 && java.lang.Double.compare(that.avrageFare, avrageFare) == 0;
-    }
-
-    @java.lang.Override
-    public java.lang.String toString() {
-        return "InvoiceSummary{" +
-                "numofRides=" + numofRides +
-                ", totalFare=" + totalFare +
-                ", avrageFare=" + avrageFare +
-                '}';
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        InvoiceSummary that = (InvoiceSummary) o;
+        return Double.compare(that.totalFare, totalFare) == 0 && numOfRides == that.numOfRides && Double.compare(that.averageFare, averageFare) == 0;
     }
 }

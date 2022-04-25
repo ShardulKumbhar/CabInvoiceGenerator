@@ -1,77 +1,40 @@
 package com.bridgelabz;
 
+import java.util.Map;
+
 public class InvoiceGenerator {
-    /**
-     * Created variables
-     */
-    private static final int MINIMUM_COST_PER_KILOMETER = 10;
-    private static final int COST_PER_TIME = 1;
-    private static final int MINIMUM_FARE = 5;
 
-    private RideRepository rideRepository;
-
-    /**
-     * @param distance-value taking from user
-     * @param time-taking    from user
-     * @return- fair by calculating
+    /*
+    Constants
      */
-    public double calculateFare(double distance, int time) {
-        double fare = distance * MINIMUM_COST_PER_KILOMETER + time * COST_PER_TIME;
-        /*
-        Checking if min fare less than 5 should give minimum 5 fare
-         */
-        if (fare < MINIMUM_FARE)
-            return MINIMUM_FARE;
-        return fare;
+    private static final int COST_PER_MIN = 1;
+    private static final double COST_PER_KM = 10;
+    private static final double MIN_FARE = 5;
+
+    /*
+    Method To get Actual Fare
+     */
+    public static double calculateFare(double distance, int time) {
+        double fare = (distance * COST_PER_KM) + (time * COST_PER_MIN);
+        return Math.max(fare, MIN_FARE);
     }
 
     /*
-    Method to Calculate Fare for Multiple Rides
+    Method to get Multiple ride total fare
      */
-    public double calculateFare(Ride[] rides) {
+    public InvoiceSummary calculateFare(Ride[] rides) {
         double totalFare = 0;
         for (Ride ride : rides) {
-            totalFare += calculateFare(ride.distance, ride.time);
+            totalFare += ride.rideType.calculateCategoryFare(ride.distance, ride.time);
         }
+        return new InvoiceSummary(totalFare, rides.length);
+    }
+
+    /*
+    Method to get list of a user using user id
+     */
+    public InvoiceSummary calculateFare(String userID, Map<String, Ride[]> rideBook) {
+        InvoiceSummary totalFare = calculateFare(rideBook.get(userID));
         return totalFare;
-    }
-
-    /*
-    Method to get Invoice Summary 
-     */
-    public InvoiceSummary getInvoiceSummary(Ride[] rides) {
-        double totalFare = 0;
-        for (Ride ride : rides) {
-            totalFare += this.calculateFare(ride.distance, ride.time);
-        }
-        return new InvoiceSummary(rides.length, totalFare );
-    }
-
-    /**
-     * create method to calculate total fare as per distance and time
-     *
-     * @param -distance -distance of per km cost is 10 rs
-     * @param -time     -per minute cost is 1rs
-     * @return total fare -total fare to be calulated
-     */
-    public InvoiceGenerator() {
-        this.rideRepository = new RideRepository();
-    }
-    /**
-     * method created add Rides for Given a user id
-     *
-     * @param userId
-     * @param ride
-     */
-    public void addRides(String userId, Ride[] ride) {
-        rideRepository.addRide(userId, ride);
-    }
-
-    /*
-     * returning in voice summary
-     */
-    public double getInvoiceSummary(String userId) {
-        return this.calculateFare(rideRepository.getRides(userId));
-
     }
 }
