@@ -64,5 +64,17 @@ public class InvoiceServiceTest {
         assertEquals(expectedInvoicesummary, summary);
 
     }
+    /*
+  multiple rides should return the ride summary
+   */
+    @Test
+    public void givenUserIdShouldReturnTheInvoice() {
+        String userId = "abc@123";
+        Ride[] rides = { new Ride(2.0, 5), new Ride(0.1, 1) };
+        invoiceGenerator.addRides(userId, rides);
+        double summary = invoiceGenerator.getInvoiceSummary(userId);
+        InvoiceSummary checkSummary = new InvoiceSummary(2, 30.0);
+         assertEquals(30.0, summary);
 
+    }
 }
